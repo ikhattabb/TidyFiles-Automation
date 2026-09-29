@@ -8,19 +8,16 @@ import os
 import shutil
 
 # --- 1. SETUP PATHS ---
-# المصادر (الأماكن التي سيتم تنظيفها)
 sources = [
     os.path.expanduser("~/Downloads"),
     os.path.expanduser("~/Desktop")
 ]
 
-# الوجهات (الأماكن التي ستنقل إليها الملفات)
 img_dest = os.path.expanduser("~/Pictures/Organized_Images")
 vid_dest = os.path.expanduser("~/Videos/Organized_Videos")
 doc_dest = os.path.expanduser("~/Documents/Organized_Docs")
 music_dest = os.path.expanduser("~/Music/Organized_Music") 
 
-# إنشاء المجلدات إذا لم تكن موجودة
 for folder in [img_dest, vid_dest, doc_dest, music_dest]:
     if not os.path.exists(folder):
         os.makedirs(folder)
@@ -37,8 +34,6 @@ choice = input("What would you like to organize? (images / videos / docs / music
 
 # --- 4. THE CORE LOGIC ---
 moved_count = 0
-
-# المرور على كل مسار مصدر (التحميلات وسطح المكتب)
 for path in sources:
     if not os.path.exists(path):
         continue
@@ -47,14 +42,13 @@ for path in sources:
         file_ext = os.path.splitext(filename)[1].lower()
         source_file = os.path.join(path, filename)
 
-        # تخطي المجلدات، نحتاج الملفات فقط
+        # Ignore folders, files only
         if os.path.isdir(source_file):
             continue
 
         target_folder = None
         label = ""
 
-        # تحديد الوجهة بناءً على النوع واختيار المستخدم
         if (choice == "images" or choice == "all") and file_ext in image_exts:
             target_folder, label = img_dest, "IMAGE"
         elif (choice == "videos" or choice == "all") and file_ext in video_exts:
@@ -64,7 +58,6 @@ for path in sources:
         elif (choice == "music" or choice == "all") and file_ext in music_exts:
             target_folder, label = music_dest, "MUSIC"
 
-        # تنفيذ عملية النقل إذا انطبقت الشروط
         if target_folder:
             try:
                 shutil.move(source_file, os.path.join(target_folder, filename))
